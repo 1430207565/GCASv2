@@ -1,0 +1,3 @@
+ Datetime  surf_opt surf_org xco2_opt xco2_org biof_opt biof_org ocnf_opt ocnf_org fire_opt fire_org flux_opt flux_org
+ 20140906      -2.94    -2.91     0.22     0.29  -81.847  -42.066    0.306    0.615    0.495    0.558   -6.823   33.331
+ 20140913      -1.94    -3.46     0.22     0.28  -40.085  -30.530    0.475    0.615    0.573    0.486   35.187   44.796

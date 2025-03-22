@@ -1,0 +1,2 @@
+   ID Year  Mon Bio_org Bio_opt Ocn_org Ocn_opt Fir_org Fir_opt  Fossil Net_org Net_opt (TgC/m)
+    1 2014    9   -0.80   -0.71   -8.33   -4.53    0.06    0.07    6.41   -2.66    1.24

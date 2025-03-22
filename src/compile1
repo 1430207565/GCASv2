@@ -1,0 +1,9 @@
+# ifort -o basemap.exe regional_map.f90 -L/software/netcdf-3.6.3-intel/lib -lnetcdf -I/software/netcdf-3.6.3-intel/include
+
+ifort -o EvaluateM.exe Module_global.f90 EvaluateM.f90 ensrf_init.f90 -L/software/netcdf-3.6.3-intel/lib -lnetcdf -I/software/netcdf-3.6.3-intel/include
+
+ifort -o PostgcasW.exe Module_global.f90 post_gcasflux_week.f90 ensrf_init.f90 ensrf_io.f90 -L/software/netcdf-3.6.3-intel/lib -lnetcdf -I/software/netcdf-3.6.3-intel/include
+
+# ifort -o test_total_unc.exe Module_global.f90 ran_mod.f90 test_total.f90 ensrf_init.f90 ensrf_io.f90 -L/software/netcdf-3.6.3-intel/lib -lnetcdf -I/software/netcdf-3.6.3-intel/include
+
+ifort -o mztout2ic.exe mztout2ic.f90 -L/share/home/zqjiang/local/netcdf-3.6.3/lib -lnetcdf -I/software/netcdf-3.6.3-intel/include

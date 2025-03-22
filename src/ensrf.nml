@@ -1,0 +1,42 @@
+  &time_control
+  year                              = 2014
+  month                             = 09
+  day                               = 06
+  rundays                           = 854
+  da_step                           = 122
+  /
+
+  &assimilation
+  casename                          =  combined
+  nrt                               =  0
+  opt_scheme                        =  2
+  ensemble                          =  50,
+  L_scale                           =  3000, 2000,
+  L_ratio                           =  1.0, 0.75,
+  opt_dir                           =  "/data/home/TommyLv/GCASv3.2_fire/output"
+  debug                             =  .True. ,
+  /
+
+  &transport_model
+  resm                              = 2
+  mozartdir                         = "/data/home/TommyLv/GCASv3.2_fire/mozart4"
+  /
+
+  &background_flux
+  priordir                          = "/data/home/TommyLv/GCASv3.2/input/priorflux"
+  resb                              = 3
+  bunc                              = 6.0,  10.0, 3.0
+  /
+
+  &observations
+  issrf                            = 0 ,
+  obsdir_srf                       = "/data/home/TommyLv/GCASv3.2_fire/input/obs",
+  issat                            = 1,
+  isgosat                          = 1
+  obsdir_gosat                     ="/data/home/TommyLv/GCASv3.2/input/obs/gosat_v9",
+  isoco2                           = 1
+  obsdir_oco2                     ="/data/home/TommyLv/GCASv3.2/input/obs/oco2_v10",
+  istansat                         = 0
+  obsdir_tansat                     ="/data/home/TommyLv/GCASv3.2/input/obs/TanSat",
+  /
+

@@ -1,0 +1,14 @@
+
+ifort -o Evaluate.exe Module_global.f90 Evaluate.f90 ensrf_init.f90 -L/software/netcdf-3.6.3-intel/lib -lnetcdf -I/software/netcdf-3.6.3-intel/include
+
+ifort -o EvaluateStep.exe Module_global.f90 EvaluateStep.f90 ensrf_init.f90 ensrf_io.f90 -L/software/netcdf-3.6.3-intel/lib -lnetcdf -I/software/netcdf-3.6.3-intel/include
+
+ifort -o Postgcas.exe Module_global.f90 post_gcasflux.f90 ensrf_init.f90 ensrf_io.f90 -L/software/netcdf-3.6.3-intel/lib -lnetcdf -I/software/netcdf-3.6.3-intel/include
+
+ifort -o PostUnc.exe Module_global.f90 post_gcasuncert.f90 ensrf_init.f90 ensrf_io.f90 -L/software/netcdf-3.6.3-intel/lib -lnetcdf -I/software/netcdf-3.6.3-intel/include
+
+ifort -o Gen_ensembles.exe Module_global.f90 ran_mod.f90 Gen_ensembles.f90 ensrf_init.f90 spatial_interpolat.f90 ensrf_io.f90 -L/software/netcdf-3.6.3-intel/lib -lnetcdf -I/software/netcdf-3.6.3-intel/include
+
+ifort -o Update_iconc.exe Module_global.f90 update_initconc.f90 ensrf_init.f90 -L/software/netcdf-3.6.3-intel/lib -lnetcdf -I/software/netcdf-3.6.3-intel/include
+
+ifort -o Ensrf.exe Module_global.f90 module_qsort.f90 ensrf.f90 ensrf_init.f90 ensrf_noGuassian.f90 Get_background.f90 Get_obs.f90 ensrf2emission.f90 ensrf_io.f90 spatial_interpolat.f90 Calc_correl.f90 -L/software/netcdf-3.6.3-intel/lib -lnetcdf -I/software/netcdf-3.6.3-intel/include

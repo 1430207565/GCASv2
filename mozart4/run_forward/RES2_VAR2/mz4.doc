@@ -1,0 +1,39 @@
+  
+  
+           |--------------------------------------------------------------------------------------------------|
+           |                                                                                                  |
+           |                                                                                                  |
+           |                            This is a mozart4 simulation with :                                   |
+           |                            (1)  MOZART-4 chemistry t106 of only CO2                              |
+           |                            (2)  ERA interim inputs (T106, 45 levels)                             |
+           |                            (3)  with SYNOZ                                                       |
+           |                                                                                                  |
+           |                                                                                                  |
+           |--------------------------------------------------------------------------------------------------|
+  
+  
+     Solution species
+      (  1)  EN001      (CO2)
+      (  2)  EN002      (CO2)
+  
+  
+     Invariant species
+      (  1)  M       
+  
+Class List
+==========
+  
+ Implicit  
+ --------
+      (  1)  EN001   
+      (  2)  EN002   
+  
+ Species with non-zero surface emission
+ ( 1)   EN001   
+ ( 2)   EN002   
+  
+  
+ Equation Report
+  
+    d(EN001)/dt = 0                                                                                                     
+    d(EN002)/dt = 0                                                                                                     

@@ -1,0 +1,25 @@
+ &NLIST
+ case                    = 'CASENAME'                     ! simulation case
+ title                   = 'Carbon'                       ! simulation title
+ timestep                = '15m'                          ! model timestep (of form "integer{smh}") = 20 minutes
+ calendar                = 'gregorian'                    ! ncep dynamical datasets use gregorian calendar
+ icdate                  = ICDATE  ! simulation start date in yyyymmdd format
+ icsec                   = 0                              ! simulation start seconds relative to icdate
+ sim_type                = 'INITIAL'                      ! simulation type (INITIAL or RESTART)
+ sim_duration            = 'WWIDTHd'                      ! simulation length, in timesteps(pos) or days (neg)
+ hstfrq(1)               = '3h'                           ! freq. of history file writes, in character form
+ arch_file               = 'FILE_STUB'
+ restart_frq             = 'daily'                        ! freq. of restart file writes, in character form
+ mfilt(1)                = 8                              ! max number of time samples per history file
+ local_data_path         = '/data/home/TommyLv/GCASv3.2_fire/mozart4/data'                 ! top level mozart input data directory placeholder
+ dyn_flsp%nl_filename    = 'GEOS5_19x2_pDATE.nc'         ! initial dynamics file
+ dyn_flsp%local_path     = '/data/home/TommyLv/GCASv3.2_fire/mozart4/data/dyn/'            ! local path of emissions files
+ dyn_flnm_prefix         = 'GEOS5_19x2_'                    ! dynamics file prefix string
+ dyn_flnm_date_frmt      = 'yyyymmdd'                     ! dynamics file date format string
+ ic_flsp%nl_filename     = 'ic_geos_1x1_ICDATE.nc'                  ! IC filename
+ emis_flsp%local_path    = '/data/home/TommyLv/GCASv3.2_fire/mozart4/data/emis/'            ! local path of emissions files
+ emis_timing%type        = 'serial'                     ! timing type (CYCLICAL, SERIAL, FIXED)
+ lght_no_prd_factor      = .25                            ! lightning NOx scale factor
+ sim_data_file           = 'mz4.dat'                      ! simulation data filename
+ hsttimav(1)%list        = 'PS','Q','Zm','Zi'
+ /

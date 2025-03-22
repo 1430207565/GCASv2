@@ -1,0 +1,196 @@
+#!/bin/bash
+# Main program.
+
+rootdir=$( pwd )
+mozart_dir=${rootdir}/mozart4
+mozart_data_dir=$mozart_dir/data
+work_dir=${rootdir}/asmlt
+
+CASE=test
+icdate=20140906
+simulation_days=14   #5026   #3899    #1826   #3899 #854(to20170106) #3402(to20231229)
+long_window=7
+
+nproc=24          #24
+ensemble=50
+res_mzt=2          #resolution of MOZART, res_mzt=2, use GEOS-5 meteo
+res_flux=3         #resolution of lambda
+
+is_restart=0
+reicdate=20150425
+
+is_sat=1   #1, include xco2 data, 0, without xco2 data 
+is_srf=0     #1, include surface data, 0, without surface data
+
+is_gosat=1  #1 use, 0, no 
+is_oco2=1
+is_tansat=0
+
+pdate=`date +%Y%m%d -d "$icdate -1 day"`
+
+cdate=$icdate
+step=1
+d1=0
+d2=0
+if [ $is_restart -eq 1 ]; then
+   cdate=$reicdate
+   d1=`date +%s -d "$cdate"`
+   d2=`date +%s -d "$icdate"`
+   d1=`echo $(( d1 / 86400 ))`
+   d2=`echo $(( d2 / 86400 ))`
+   step=`echo  $(( (d1 - d2) / $long_window + 1 ))`
+   simulation_days=`echo  $((simulation_days - d1 + d2 ))`
+#   echo $step $simulation_days
+fi
+
+if [ $is_restart -eq 0 ]; then
+rm ${mozart_dir}/run_ensemble/hist/*.nc
+rm ${mozart_dir}/run_ensemble/rest/*
+rm ${mozart_dir}/run_forward/hist/*.nc
+rm ${mozart_dir}/run_forward/rest/*
+rm ${mozart_dir}/data/emis/emissions.EN*.nc
+rm ${mozart_dir}/data/emis/emissions.intermediate*.nc
+rm ${work_dir}/ensrf.log
+fi
+
+cd $rootdir/output
+mkdir -p $CASE
+
+cd ${mozart_dir}
+sed "s;MZ_DATA_DIR;${mozart_data_dir};g" mz4.tpl.nml \
+    | sed "s/CASENAME/${CASE}/g" \
+    | sed "s/ICDATE/${icdate}/g" \
+    | sed "s/pDATE/${pdate}/g" \
+    | sed "s/WWIDTH/${long_window}/g" > long.tmp.nml
+cp long.tmp.nml ${mozart_dir}/run_ensemble/long.nml
+cp long.tmp.nml ${mozart_dir}/run_forward/long.nml
+cp long.tmp.nml ${mozart_dir}/run_ensemble/
+cp long.tmp.nml ${mozart_dir}/run_forward/
+
+cd ${mozart_dir}/run_ensemble
+mkdir -p hist rest arch temp
+#if [ ${res_mzt} -eq 2 ];then
+#cp GEOS5_28l_VAR$ensemble/* ./
+#else
+cp RES${res_mzt}_VAR$ensemble/* ./
+#fi
+
+cd ${mozart_dir}/run_forward
+mkdir -p hist rest arch temp
+#if [ ${res_mzt} -eq 2 ];then
+#cp GEOS5_28l_VAR2/* ./
+#else
+cp RES${res_mzt}_VAR2/* ./
+#fi
+
+iday=1
+
+while [ $((iday+long_window-1)) -le $simulation_days ]
+do
+    echo `date`---------------${cdate}------------------! 
+    yy=$(echo $cdate | cut -c 1-4)
+    mm=$(echo $cdate | cut -c 5-6)
+    dd=$(echo $cdate | cut -c 7-8)
+
+    if [ $is_restart -eq 1 ]
+    then
+
+        cd ${mozart_dir}/run_ensemble
+        sed 's/INITIAL/RESTART/g' long.tmp.nml > long.nml
+        echo "rest/rstrt-${yy}-${mm}-${dd}-00000" > ${mozart_dir}/run_ensemble/${CASE}-rpntr
+
+        cd ${mozart_dir}/run_forward
+        sed 's/INITIAL/RESTART/g' long.tmp.nml > long.nml
+        echo "rest/rstrt-${yy}-${mm}-${dd}-00000" > ${mozart_dir}/run_forward/${CASE}-rpntr
+     fi
+    cd $work_dir
+
+    sed "s;CASENAME;${CASE};g" ${work_dir}/ensrf.tmp.nml \
+    | sed "s/SYEAR/${yy}/g" \
+    | sed "s/SMONTH/${mm}/g" \
+    | sed "s/SDAY/${dd}/g" \
+    | sed "s/ENSEMBLE/${ensemble}/g" \
+    | sed "s/ISSRF/${is_srf}/g" \
+    | sed "s/ISSAT/${is_sat}/g" \
+    | sed "s/ISGOSAT/${is_gosat}/g" \
+    | sed "s/ISTANSAT/${is_tansat}/g" \
+    | sed "s/ISOCO2/${is_oco2}/g" \
+    | sed "s/RESMZT/${res_mzt}/g" \
+    | sed "s/RESFLX/${res_flux}/g" \
+    | sed "s/RUNDAYS/${long_window}/g" \
+    | sed "s/STEP/${step}/g" \
+    | sed "s;ROOTDIR;${rootdir};g" > ensrf.nml
+
+    echo "Create ensemble fluxes .........................."
+    ./Gen_ensembles.exe
+
+    cd $mozart_dir/run_ensemble
+    echo "Running MOZART with ensemble fluxes.............."
+    mpirun -np $nproc ./mz4_mpi long.nml > mz4_mpi.log 
+#    ./run_mz4.sh $CASE $nproc
+    edate=`date +%Y%m%d -d "$cdate +$long_window day"`
+    edate=`date +%Y%m%d -d "$edate -1 day"`
+    eyy=$(echo $edate | cut -c 1-4)
+    emm=$(echo $edate | cut -c 5-6)
+    edd=$(echo $edate | cut -c 7-8)
+    fnlmztfile=$mozart_dir/run_ensemble/hist/${CASE}.mz4.h0.${eyy}-${emm}-${edd}-10800.nc
+    echo "Check ensemble run result of "${CASE}.mz4.h0.${eyy}-${emm}-${edd}-10800.nc
+    if [ ! -e $fnlmztfile ]; then
+       echo The final mozart hist file not exist! ensemble run mzt error!
+       exit 0
+    fi
+
+   echo 'Doing EnSRF assimilation...........................'
+    cd $work_dir
+    ./Ensrf.exe 
+
+# run mozart with opt fluxes
+    cd $mozart_dir/run_forward
+    echo "Running MOZART with opt fluxes...................."
+    mpirun -np $nproc ./mz4_mpi long.nml > mz4_mpi.log
+#    ./run_mz4.sh $CASE $nproc
+
+    fnlmztfile=$mozart_dir/run_forward/hist/${CASE}.mz4.h0.${eyy}-${emm}-${edd}-10800.nc
+    echo $fnlmztfile
+    echo "Check forward run result of "${CASE}.mz4.h0.${eyy}-${emm}-${edd}-10800.nc
+    if [ ! -e $fnlmztfile ]; then
+       echo The final mozart hist file  not exist! forward run mzt error!
+       exit 0
+    fi
+
+    echo 'Updating the inital concentrations ..............'
+    cd $work_dir
+    ./Update_iconc.exe
+    ./EvaluateStep.exe
+ 
+    year_old=$(echo $cdate | cut -c 1-4)
+    odate=`date +%Y%m%d -d "$cdate -$long_window day"`
+    cdate=`date +%Y%m%d -d "$cdate +$long_window day"`
+    iday=$(( iday + long_window ))
+    step=$[step+1] 
+    year_new=$(echo $cdate | cut -c 1-4)
+    if [ $odate -ge $icdate ]
+    then
+        echo 'clear history file started from '${odate}
+        ii=0
+        while [ $ii -lt $long_window ]
+        do
+           rdate=`date +%Y-%m-%d -d "$odate +$ii day"` 
+           rm ${mozart_dir}/run_ensemble/hist/*.${rdate}*.nc
+           rm ${mozart_dir}/run_ensemble/rest/*${rdate}*
+           ii=$[ii+1]
+        done
+    fi
+
+    is_restart=1
+done
+cd $work_dir
+simulation_days=`echo  $((simulation_days + d1 - d2 ))`
+echo '----------------Run DA successful----------------'
+echo 'Start post processes ............................'
+./Postgcas.exe  $icdate $simulation_days 
+./PostUnc.exe $icdate $simulation_days
+echo 'Start evaluating process ........................'
+./Evaluate.exe  $icdate $simulation_days
+
+
