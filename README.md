@@ -34,12 +34,12 @@ When the number of observations and partitions is small and the inversion durati
 * 1.Preparation:
   * Ensure you have the required hardware and software environment.
   * Download or clone the repository.
-* 2. Input Data:
+* 2.Input Data:
   * Place the necessary a priori flux data and observation files into the input/ directory.
-* 3. Running the Code:
+* 3.Running the Code:
   * Execute the main script gcas_start to initiate the inversion process.
   * The core processing in the src/ directory will run the inversion workflow.
-* 4. Post-Processing:
+* 4.Post-Processing:
   * The inversion results can be found in the Result/ directory.
 # Usage License
 This code is provided strictly for academic research purposes. Commercial use, redistribution, or modifications require prior written permission from the project maintainers. Please contact the project maintainers for authorization if you wish to use the code beyond academic research.
