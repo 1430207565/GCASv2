@@ -11,13 +11,12 @@ GCASv2 is an atmospheric inversion system described in the paper "Regional CO₂
 * Contact
 # Overview
 GCASv2 utilizes Mozart-4 atmospheric transport model and the ensemble root-mean-square filtering algorithm to assimilate satellite XCO2 retrievals to estimate gridded carbon fluxes. For more details about the GCASv2, please refer to the paper "Regional CO2 fluxes from 2010 to 2015 inferred from  GOSAT XCO2 retrievals using a new version of the Global  Carbon Assimilation System". 
-# Repo Contents
+# Repository Structure
 * src/: Core processing code for GCASv2.
 * asmlt/: Contains the compiled executable program.
 * input/: A priori flux data and observation files required for the inversion.
 * Mozart4/: The atmospheric transport model used by GCASv2.
 * output/: Post-processing scripts for the a posteriori flux data.
-* Result/: Directory to store inversion results.
 * gcas_start: Main script to initiate the GCASv2 processing workflow.
 # System Requirements
 ## Hardware Requirements
@@ -40,7 +39,7 @@ When the number of observations and partitions is small and the inversion durati
   * Execute the main script gcas_start to initiate the inversion process.
   * The core processing in the src/ directory will run the inversion workflow.
 * 4.Post-Processing:
-  * The inversion results can be found in the Result/ directory.
+  * The inversion results can be found in the output/ directory.
 # Usage License
 This code is provided strictly for academic research purposes. Commercial use, redistribution, or modifications require prior written permission from the project maintainers. Please contact the project maintainers for authorization if you wish to use the code beyond academic research.
 # Contact
