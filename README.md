@@ -1,5 +1,5 @@
 # Global Carbon Assimilation System v2 (GCASv2)
-GCASv2 is a atmospheric inversion system described in the paper "Regional CO₂ fluxes from 2010 to 2015 inferred from GOSAT XCO₂ retrievals using a new version of the Global Carbon Assimilation System". This repository allows users to generate inversion results for global and regional carbon fluxes.
+GCASv2 is an atmospheric inversion system described in the paper "Regional CO₂ fluxes from 2010 to 2015 inferred from GOSAT XCO₂ retrievals using a new version of the Global Carbon Assimilation System". This repository allows users to generate inversion results for global and regional carbon fluxes.
 ## Table of Contents
 * Overview
 * Repository Structure
