@@ -16,7 +16,7 @@ GCASv2 utilizes Mozart-4 atmospheric transport model and the ensemble root-mean-
 * asmlt/: Contains the compiled executable program.
 * input/: A priori flux data and observation files required for the inversion.
 * Mozart4/: The atmospheric transport model used by GCASv2.
-* output/: Post-processing scripts for the a posteriori flux data.
+* output/: Posterior results.
 * gcas_start: Main script to initiate the GCASv2 processing workflow.
 # System Requirements
 ## Hardware Requirements
